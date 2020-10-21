@@ -17,9 +17,9 @@ setup(
     license="GPLv3",
     description="Properly interpret, decrypt, and replay pcap files",
     install_requires=[
-        "dpkt==1.8.7",
-        "tlslite-ng==0.7.5",
-        "click>=6.6, <7",
+        "dpkt",
+        "tlslite-ng",
+        "click",
     ],
     extras_require={
         "mitmproxy": [
