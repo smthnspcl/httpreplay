@@ -53,7 +53,7 @@ class TCPPacketStreamer(Protocol):
             handler = handler.parent
         handler.parent = self.parent
 
-    def handler(self, (srcip, srcport, dstip, dstport)):
+    def handler(self, srcip, srcport, dstip, dstport):
         if srcport in self.handlers:
             return self.handlers[srcport]
         elif dstport in self.handlers:

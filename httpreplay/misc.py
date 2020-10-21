@@ -9,6 +9,7 @@ import struct
 
 tlsmaster = "RSA Session-ID:(?P<sid>[0-9a-f]+) Master-Key:(?P<key>[0-9a-f]+)"
 
+
 def read_tlsmaster(filepath):
     ret = {}
     for line in open(filepath, "rb"):
@@ -23,6 +24,7 @@ def read_tlsmaster(filepath):
             except TypeError:
                 continue
     return ret
+
 
 class JA3(object):
     """This JA3/JA3S calculation code is a modified version of the code
@@ -270,7 +272,7 @@ def patch_dpkt_ssl_tlshello_unpacks():
                 pointer += 2
                 # single compression method
                 self.compression = \
-                struct.unpack('!B', self.data[pointer:pointer + 1])[0]
+                    struct.unpack('!B', self.data[pointer:pointer + 1])[0]
                 pointer += 1
                 # Parse extensions if present
                 if len(self.data[pointer:]) >= 6:

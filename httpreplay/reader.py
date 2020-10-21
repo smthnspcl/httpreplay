@@ -14,11 +14,13 @@ from httpreplay.exceptions import (
 
 log = logging.getLogger(__name__)
 
+
 def inet_to_str(inet):
     try:
         return socket.inet_ntop(socket.AF_INET, inet)
     except ValueError:
         return socket.inet_ntop(socket.AF_INET6, inet)
+
 
 class PcapReader(object):
     """Iterates over a PCAP file and yields all interesting events after
@@ -38,7 +40,7 @@ class PcapReader(object):
         self.exceptions = {}
 
         # Backwards compatibilty with httpreplay<=0.1.14.
-        if isinstance(fp_or_filepath, basestring):
+        if isinstance(fp_or_filepath, str):
             fp_or_filepath = open(fp_or_filepath, "rb")
 
         try:

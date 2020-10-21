@@ -22,6 +22,7 @@ from httpreplay.utils import pcap2mitm
 
 log = logging.getLogger(__name__)
 
+
 class PcapTest(object):
     handlers = {
         80: http_handler,
@@ -50,6 +51,7 @@ class PcapTest(object):
 
         assert self.expected_output == output
 
+
 class TestSimple(PcapTest):
     """"Tests TCP reassembly and basic HTTP extraction"""
     pcapfile = "test.pcap"
@@ -68,6 +70,7 @@ class TestSimple(PcapTest):
         (1278472581.580736, "/sd/logo2.png", 0),
     ]
 
+
 class TestNoResponse(PcapTest):
     """Extracts HTTP requests which have no response"""
     pcapfile = "2014-08-13-element1208_spm2.exe-sandbox-analysis.pcap"
@@ -79,6 +82,7 @@ class TestNoResponse(PcapTest):
         ("POST", "/cmd.php", ""),
         ("GET", "/cmd.php", ""),
     ]
+
 
 class TestEmptyRequest(PcapTest):
     """Handle client disconnect and empty request"""
@@ -97,6 +101,7 @@ class TestEmptyRequest(PcapTest):
         ("172.16.165.133", "", "220 mx.google.com ESMTP v9si4604526wah.36\r\n"),
     ]
 
+
 class TestCutoff(PcapTest):
     """Extracts HTTP response cut off during transmission"""
     pcapfile = "2014-12-13-download.pcap"
@@ -107,6 +112,7 @@ class TestCutoff(PcapTest):
     expected_output = [
         ("/zp/zp-core/zp-extensions/tiny_mce/plugins/ajaxfilemanager/inc/main.php", 451729, 35040),
     ]
+
 
 # FIXME: This fails for some reason?
 class TestRetransmission(PcapTest):
@@ -142,6 +148,7 @@ class TestRetransmission(PcapTest):
         (("192.168.138.163", 49220, "24.253.145.21", 48754), "TCPRetransmission"),
     ]
 
+
 class TestSpuriousRetransmission(PcapTest):
     """Handles TCP Spurious Retransmission logic"""
     pcapfile = "2015-10-08-Nuclear-EK-example-2-traffic.pcap"
@@ -167,6 +174,7 @@ class TestSpuriousRetransmission(PcapTest):
         "/file.htm",
     ]
 
+
 class TestIgmpAndHttp(PcapTest):
     """Handle IGMP packets and HTTP on port 80"""
     pcapfile = "2015-10-13-Neutrino-EK-traffic-second-run.pcap"
@@ -175,14 +183,15 @@ class TestIgmpAndHttp(PcapTest):
         return sent.method, sent.uri
 
     expected_output = (
-        [("POST", "/forum/db.php")] * 3 +
-        [("GET", "/domain/195.22.28.194")] * 2 +
-        [("GET", "/")] +
-        [("GET", "/domain/195.22.28.194")] +
-        [("POST", "/forum/db.php")] +
-        [("GET", "/view.js")] +
-        [("POST", "/forum/db.php")] * 2
+            [("POST", "/forum/db.php")] * 3 +
+            [("GET", "/domain/195.22.28.194")] * 2 +
+            [("GET", "/")] +
+            [("GET", "/domain/195.22.28.194")] +
+            [("POST", "/forum/db.php")] +
+            [("GET", "/view.js")] +
+            [("POST", "/forum/db.php")] * 2
     )
+
 
 class TestHttpNoDefaultPort(PcapTest):
     """Handle HTTP on non-default ports"""
@@ -202,6 +211,7 @@ class TestHttpNoDefaultPort(PcapTest):
         ("GET", "/full/a2hjY3hs"),
         ("GET", "/august/Z250anJ5dGRq"),
     ]
+
 
 class TestCaptureNotAcked(PcapTest):
     """Extracts HTTP requests which are not acknowledged"""
@@ -243,6 +253,7 @@ class TestCaptureNotAcked(PcapTest):
         "f3856d13d9d3d951d2e1856661345cf5"
     ]
 
+
 class TestCaptureNotAcked2(PcapTest):
     """Extracts HTTP requests which are not acknowledged"""
     pcapfile = "EK_MALWARE_2014-09-29-Nuclear-EK-traffic_mailware-traffic-analysis.net.pcap"
@@ -255,21 +266,22 @@ class TestCaptureNotAcked2(PcapTest):
             return hashlib.md5(recv.body).hexdigest()
 
     expected_output = (
-        [None] * 114 +
-        ["d41d8cd98f00b204e9800998ecf8427e"] +
-        [None] * 33 +
-        ["56398e76be6355ad5999b262208a17c9"] +
-        [None] * 12 +
-        ["07a37ca8f8898d5e1d8041ca37e8b399"] +
-        ["56398e76be6355ad5999b262208a17c9"] +
-        [None] * 2 +
-        ["56398e76be6355ad5999b262208a17c9"] +
-        [None] * 11 +
-        ["d41d8cd98f00b204e9800998ecf8427e"] +
-        [None] * 161 +
-        ["56398e76be6355ad5999b262208a17c9"] +
-        [None] * 40
+            [None] * 114 +
+            ["d41d8cd98f00b204e9800998ecf8427e"] +
+            [None] * 33 +
+            ["56398e76be6355ad5999b262208a17c9"] +
+            [None] * 12 +
+            ["07a37ca8f8898d5e1d8041ca37e8b399"] +
+            ["56398e76be6355ad5999b262208a17c9"] +
+            [None] * 2 +
+            ["56398e76be6355ad5999b262208a17c9"] +
+            [None] * 11 +
+            ["d41d8cd98f00b204e9800998ecf8427e"] +
+            [None] * 161 +
+            ["56398e76be6355ad5999b262208a17c9"] +
+            [None] * 40
     )
+
 
 class TestWeirdRetransmission(PcapTest):
     """Packet 15 retransmits the tail of packet 11"""
@@ -290,6 +302,7 @@ class TestWeirdRetransmission(PcapTest):
         "\x00\x00\x00\x00\x00"
     ]
 
+
 class TestClientSideInvalidTcpPacketOrder(PcapTest):
     """Client side InvalidTcpPacketOrder exception."""
     pcapfile = "invalidtcppacketorder.pcap"
@@ -305,10 +318,11 @@ class TestClientSideInvalidTcpPacketOrder(PcapTest):
         (97, 179),
     ]
 
+
 class TestTLSWithRC4(PcapTest):
     pcapfile = "stream11.pcap"
 
-    def _https_handler():
+    def _https_handler(self):
         session_id = "5ab7c9537928268ba71cd5fc790b6accb29707cfa7b3f85347e432a439eb1b4b"
         master_key = "50321cf5552ba2f3ed34cd6eee005cf6490f5d915c7db8e2cfbf54940140308aa09c0a4e94107df6b25d2509f5bf0f13"
         return https_handler({
@@ -326,10 +340,11 @@ class TestTLSWithRC4(PcapTest):
         "/iam.js",
     ]
 
+
 class TestNoGzipBody(PcapTest):
     pcapfile = "nogzipbody.pcap"
 
-    def _https_handler():
+    def _https_handler(self):
         session_id = "479ef8a88198b5b3f7e5b8bf79dea2d0635300ad744de08deb4e83610c5227e9"
         master_key = "25fba9ac38b8750ead7b9ba50aba06e12aa566ffa0c3fa24cbdaf638711b8458da84cd79e9b32f4025a858a5c106c7a5"
         return https_handler({
@@ -349,9 +364,11 @@ class TestNoGzipBody(PcapTest):
         "/fonts/gidole/gidole-regular-webfont.eot?",
     ]
 
+
 class TestOddSMB(PcapTest):
     pcapfile = "invldord.pcap"
     expected_output = []
+
 
 class TestNoTLSKeys(object):
     class DummyProtocol(object):
@@ -372,6 +389,7 @@ class TestNoTLSKeys(object):
             ((0, 0, 0, 0), 0, "tcp", "foo\r\n", "bar"),
         ]
 
+
 def test_read_chunked():
     def parse(content):
         try:
@@ -388,13 +406,16 @@ def test_read_chunked():
     assert not parse(b"1\r\nfoo")
     assert not parse(b"foo\r\nfoo")
 
+
 def test_init_reader():
     a = PcapReader("tests/pcaps/test.pcap")
     b = PcapReader(open("tests/pcaps/test.pcap", "rb"))
     assert list(a.pcap) == list(b.pcap)
 
+
 try:
     import mitmproxy
+
     mitmproxy  # Fake usage.
 except ImportError:
     pass
@@ -403,11 +424,12 @@ else:
         filepath = tempfile.mktemp()
         do_pcap2mitm.callback(
             "tests/pcaps/2015-10-13-Neutrino-EK-traffic-second-run.pcap",
-            open(filepath, "wb"),  None, False
+            open(filepath, "wb"), None, False
         )
         assert hashlib.md5(open(filepath, "rb").read()).hexdigest() == (
             "667ce4057bb6cfa0082df6ca1ba40a87"
         )
+
 
     def test_pcap2mitm():
         filepath = tempfile.mktemp()
@@ -419,12 +441,13 @@ else:
             "667ce4057bb6cfa0082df6ca1ba40a87"
         )
 
+
 class TestTLSInfoJA3(PcapTest):
     """Handle HTTP on non-default ports"""
     pcapfile = "stream11.pcap"
     tlsinfo = True
 
-    def _https_handler():
+    def _https_handler(self):
         session_id = "5ab7c9537928268ba71cd5fc790b6accb29707cfa7b3f85347e432a439eb1b4b"
         master_key = "50321cf5552ba2f3ed34cd6eee005cf6490f5d915c7db8e2cfbf54940140308aa09c0a4e94107df6b25d2509f5bf0f13"
         return https_handler({
@@ -436,7 +459,7 @@ class TestTLSInfoJA3(PcapTest):
     }
 
     def format(self, s, ts, p, sent, recv, tlsinfo):
-        print tlsinfo.JA3, tlsinfo.JA3_params, tlsinfo.JA3S, tlsinfo.JA3S_params
+        print(tlsinfo.JA3, tlsinfo.JA3_params, tlsinfo.JA3S, tlsinfo.JA3S_params)
         return tlsinfo.JA3, tlsinfo.JA3_params, tlsinfo.JA3S, tlsinfo.JA3S_params
 
     expected_output = [
@@ -444,6 +467,7 @@ class TestTLSInfoJA3(PcapTest):
          "769,47-53-5-10-49171-49172-49161-49162-50-56-19-4,65281-0-5-10-11,23-24,0",
          "d2e6f7ef558ea8036c7e21b163b2d1af", "769,5,0-65281")
     ]
+
 
 def test_patch_dpkt_ssl_tlshello():
     from httpreplay.misc import patch_dpkt_ssl_tlshello_unpacks

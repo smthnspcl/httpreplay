@@ -14,6 +14,7 @@ from httpreplay.smegma import TCPPacketStreamer
 
 log = logging.getLogger(__name__)
 
+
 def pcap2mitm(pcapfile, mitmfile, tlsmaster=None, stream=False):
     try:
         from mitmproxy import models
@@ -89,7 +90,7 @@ def pcap2mitm(pcapfile, mitmfile, tlsmaster=None, stream=False):
         flow.response = models.HTTPResponse.wrap(response)
         flow.response.timestamp_start = server_conn.timestamp_start
 
-        flow.id = str(uuid.UUID(bytes=hashlib.md5("%d%d%s%s" % (
+        flow.id = str(uuid.UUID(bytes=hashlib.md5(b"%d%d%s%s" % (
             client_conn.timestamp_start, server_conn.timestamp_start,
             request.data.content, response.data.content
         )).digest()))

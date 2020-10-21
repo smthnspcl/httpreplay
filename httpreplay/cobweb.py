@@ -195,7 +195,7 @@ class HttpsProtocol(HttpProtocol):
 
     def handle(self, s, ts, protocol, sent, recv, tlsinfo=None):
         if protocol != "tls":
-            print "Type: %s" % self.parent
+            print("Type: %s" % self.parent)
             return self.parent.handle(s, ts, protocol, sent, recv, tlsinfo)
 
         super(HttpsProtocol, self).handle(s, ts, protocol, sent, recv, tlsinfo)

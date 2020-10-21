@@ -5,9 +5,10 @@
 import os
 
 from httpreplay.reader import PcapReader
-from httpreplay.smegma import TCPPacketStreamer, TLSStream
+from httpreplay.smegma import TCPPacketStreamer
 from httpreplay.cut import smtp_handler
 from httpreplay.cobweb import SmtpProtocol
+
 
 class SmtpTest(object):
     handlers = {
@@ -26,6 +27,7 @@ class SmtpTest(object):
             r = recv
         return s, r
 
+
 def test_read_smtp_from_to():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
     sent, recv = test.get_sent_recv()
@@ -40,6 +42,7 @@ def test_read_smtp_from_to():
         sent.mail_to
     ]
     assert expected == output
+
 
 def test_read_smtp_headers():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
@@ -57,6 +60,7 @@ def test_read_smtp_headers():
         "MIME-Version": "1.0",
     }
 
+
 def test_read_smtp_message_body():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
     sent, recv = test.get_sent_recv()
@@ -64,11 +68,13 @@ def test_read_smtp_message_body():
         "This is a multi-part message in MIME format.\r\n\r\n"
     )
 
+
 def test_get_username_password_auth_login():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
     sent, recv = test.get_sent_recv()
     assert sent.username == "galunt"
     assert sent.password == "V1v1tr0n"
+
 
 def test_get_username_password_auth_login_arg():
     smtp = SmtpProtocol()
@@ -82,6 +88,7 @@ def test_get_username_password_auth_login_arg():
     assert smtp.request.username == "food@beer.plz"
     assert smtp.request.password == "ShoopDaWhoop!"
 
+
 def test_get_username_password_auth_plain():
     smtp = SmtpProtocol()
     smtp.init()
@@ -94,6 +101,7 @@ def test_get_username_password_auth_plain():
     assert smtp.request.username == "testuser"
     assert smtp.request.password == "Aw3s0mP4zzs!"
 
+
 def test_get_username_password_auth_plain_arg():
     smtp = SmtpProtocol()
     smtp.init()
@@ -101,6 +109,7 @@ def test_get_username_password_auth_plain_arg():
     smtp.parse_request("AUTH PLAIN AHRlc3R1c2VyAEF3M3MwbVA0enpzIQ==")
     assert smtp.request.username == "testuser"
     assert smtp.request.password == "Aw3s0mP4zzs!"
+
 
 def test_get_username_cram_md5_challenge():
     smtp = SmtpProtocol()
@@ -111,6 +120,7 @@ def test_get_username_cram_md5_challenge():
     smtp.parse_request("ZnJlZCA5ZTk1YWVlMDljNDBhZjJiODRhMGMyYjNiYmFlNzg2ZQ==")
     assert smtp.request.username == "fred"
     assert smtp.request.password is None
+
 
 def test_smtp_reply_ok_responses():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
@@ -124,6 +134,7 @@ def test_smtp_reply_ok_responses():
         "250 ok",
         "250 ok 1182675387 qp 77793",
     ]
+
 
 def test_read_smtp_ready_message():
     test = SmtpTest(os.path.join("tests", "pcaps", "smtp-auth-login.pcap"))
